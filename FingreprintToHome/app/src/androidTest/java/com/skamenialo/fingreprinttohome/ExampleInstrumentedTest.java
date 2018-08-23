@@ -1,4 +1,4 @@
-package com.skamenialo.fingreprinttohome;
+package com.skamenialo.fingerprint2home;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.skamenialo.fingreprinttohome", appContext.getPackageName());
+        assertEquals("com.skamenialo.fingerprint2home", appContext.getPackageName());
     }
 }

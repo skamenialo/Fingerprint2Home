@@ -1,4 +1,4 @@
-package com.skamenialo.fingreprinttohome;
+package com.skamenialo.fingerprint2home;
 
 import org.junit.Test;
 

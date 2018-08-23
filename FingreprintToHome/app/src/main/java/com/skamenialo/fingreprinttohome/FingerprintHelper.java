@@ -1,4 +1,4 @@
-package com.skamenialo.fingreprinttohome;
+package com.skamenialo.fingerprint2home;
 
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.CancellationSignal;
