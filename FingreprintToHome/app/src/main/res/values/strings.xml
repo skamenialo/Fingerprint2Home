@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Fingreprint To Home</string>
-    <string name="permission_needed">Fingerprint permission is needed. Please turn it on in application settings</string>
+    <string name="permission_needed">Fingerprint permission is needed. Please turn it on in application settings, because service can\'t be available</string>
+    <string name="device_not_supports">This device doesn\'t support fingerprint sensor. Service can\'t be available.</string>
     <string name="notification_title">Fingerprint to Home is active</string>
     <string name="notification_message">Press to open application</string>
 </resources>

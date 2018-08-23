@@ -22,12 +22,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         setContentView(R.layout.activity_main);
         FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
         ToggleButton toggleButton = (ToggleButton) findViewById(R.id.toggleButton);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED
-                || !fingerprintManager.isHardwareDetected()) {
-            Log.w(TAG, "Fingerprint not supported!");
-            toggleButton.setEnabled(false);
-            TextView textView = (TextView)findViewById(R.id.textView);
-            textView.setVisibility(View.VISIBLE);
+        TextView textView = (TextView) findViewById(R.id.textView);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Fingerprint permission not granted!");
+            textView.setText(R.string.permission_needed);
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -35,9 +33,13 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-        }else {
+        } else if (!fingerprintManager.isHardwareDetected()) {
+            Log.w(TAG, "Fingerprint not supported!");
+            textView.setText(R.string.device_not_supports);
+        } else {
+            toggleButton.setEnabled(true);
             toggleButton.setOnCheckedChangeListener(this);
-            if(MainService.getInstance()!=null)
+            if (MainService.getInstance() != null)
                 toggleButton.setChecked(true);
             Log.i(TAG, "Fingerprint supported!");
         }
