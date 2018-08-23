@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Fingreprint To Home</string>
+    <string name="permission_needed">Fingerprint permission is needed. Please turn it on in application settings</string>
+</resources>
