@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED
                 || !fingerprintManager.isHardwareDetected()) {
             Log.w(TAG, "Fingerprint not supported!");
-            toggleButton.setClickable(false);
             toggleButton.setEnabled(false);
             TextView textView = (TextView)findViewById(R.id.textView);
             textView.setVisibility(View.VISIBLE);
@@ -38,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             // for ActivityCompat#requestPermissions for more details.
         }else {
             toggleButton.setOnCheckedChangeListener(this);
+            if(MainService.getInstance()!=null)
+                toggleButton.setChecked(true);
             Log.i(TAG, "Fingerprint supported!");
         }
     }

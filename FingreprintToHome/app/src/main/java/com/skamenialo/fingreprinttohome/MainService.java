@@ -2,6 +2,7 @@ package com.skamenialo.fingreprinttohome;
 
 import android.Manifest;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import javax.crypto.SecretKey;
 
 public class MainService extends Service implements FingerprintHelper.Callback{
     private static final String TAG = "Fingerprint.Service";
+    private static MainService mInstance;
+
     private FingerprintHelper mFingerprintHelper;
     private FingerprintManager.CryptoObject mCryptoObject;
     private Signature mSignature;
@@ -47,9 +50,14 @@ public class MainService extends Service implements FingerprintHelper.Callback{
     public MainService() {
     }
 
+    public static MainService getInstance(){
+        return mInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
         mFingerprintHelper = new FingerprintHelper(getSystemService(FingerprintManager.class), this);
         try {
             mKeyStore = KeyStore.getInstance("AndroidKeyStore");
@@ -87,6 +95,7 @@ public class MainService extends Service implements FingerprintHelper.Callback{
     @Override
     public void onDestroy() {
         Log.i(TAG, "onDestroy");
+        mInstance = null;
         if(mRegistered)
             register(false);
         super.onDestroy();
@@ -123,12 +132,14 @@ public class MainService extends Service implements FingerprintHelper.Callback{
             if(initSignature()) {
                 mCryptoObject = new FingerprintManager.CryptoObject(mSignature);
                 mFingerprintHelper.startListening(mCryptoObject);
+                startNotification();
                 mRegistered = true;
                 Log.i(TAG, "Registered");
             }else
                 Log.w(TAG, "Not registered");
         }else {
             mFingerprintHelper.stopListening();
+            stopNotification();
             mRegistered = false;
             Log.i(TAG, "Unregistered");
         }
@@ -169,4 +180,25 @@ public class MainService extends Service implements FingerprintHelper.Callback{
         }
     }
 
+    private void startNotification(){
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_message))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setColor(Color.parseColor("#0099cc"))
+                .setAutoCancel(false)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .build();
+        startForeground(Utils.NOTIFICATION_ID, notification);
+        Log.i(TAG, "Notification started");
+    }
+
+    private void stopNotification(){
+        getSystemService(NotificationManager.class).cancel(Utils.NOTIFICATION_ID);
+        Log.i(TAG, "Notification stopped");
+    }
 }
