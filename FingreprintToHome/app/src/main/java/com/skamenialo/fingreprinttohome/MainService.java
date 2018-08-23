@@ -111,6 +111,10 @@ public class MainService extends Service implements FingerprintHelper.Callback{
     }
 
     private void goHome(){
+        Intent localIntent = new Intent(Intent.ACTION_MAIN);
+        localIntent.addCategory(Intent.CATEGORY_HOME);
+        localIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(localIntent);
         Log.i(TAG, "goHome");
     }
 
