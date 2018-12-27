@@ -47,14 +47,14 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
     public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
         Log.i(TAG, "onAuthenticationHelp");
         if(!mSelfCancelled && mCallback!=null)
-            mCallback.onError();
+            mCallback.onFailed();
     }
 
     @Override
     public void onAuthenticationFailed() {
         Log.i(TAG, "onAuthenticationFailed");
         if(!mSelfCancelled && mCallback!=null)
-            mCallback.onError();
+            mCallback.onFailed();
     }
 
     @Override
@@ -69,5 +69,7 @@ public class FingerprintHelper extends FingerprintManager.AuthenticationCallback
         void onAuthenticated();
 
         void onError();
+
+        void onFailed();
     }
 }

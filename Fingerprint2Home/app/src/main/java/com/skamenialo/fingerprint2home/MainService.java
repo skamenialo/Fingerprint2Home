@@ -17,6 +17,7 @@ import android.security.keystore.KeyProperties;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -110,12 +111,23 @@ public class MainService extends Service implements FingerprintHelper.Callback{
     @Override
     public void onAuthenticated() {
         Log.i(TAG, "onAuthenticated");
+        Toast.makeText(mInstance, "Authenticated", Toast.LENGTH_SHORT).show();
         goHome();
+        startListening();
     }
 
     @Override
     public void onError() {
         Log.i(TAG, "onError");
+        Toast.makeText(mInstance, "Error", Toast.LENGTH_SHORT).show();
+        goHome();
+        startListening();
+    }
+
+    @Override
+    public void onFailed() {
+        Log.i(TAG, "onFailed");
+        Toast.makeText(mInstance, "Failed", Toast.LENGTH_SHORT).show();
         goHome();
     }
 
@@ -127,11 +139,15 @@ public class MainService extends Service implements FingerprintHelper.Callback{
         Log.i(TAG, "goHome");
     }
 
+    private void reRegister(){
+        register(false);
+        register(true);
+    }
+
     private void register(boolean register) {
         if(register){
             if(initSignature()) {
-                mCryptoObject = new FingerprintManager.CryptoObject(mSignature);
-                mFingerprintHelper.startListening(mCryptoObject);
+                startListening();
                 startNotification();
                 mRegistered = true;
                 Log.i(TAG, "Registered");
@@ -178,6 +194,11 @@ public class MainService extends Service implements FingerprintHelper.Callback{
         } catch (InvalidAlgorithmParameterException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void startListening(){
+        mCryptoObject = new FingerprintManager.CryptoObject(mSignature);
+        mFingerprintHelper.startListening(mCryptoObject);
     }
 
     private void startNotification(){
